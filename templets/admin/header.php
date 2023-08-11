@@ -1,6 +1,5 @@
 <?php
 
-  
 ?>
 <!DOCTYPE html>
 <html
@@ -137,12 +136,12 @@
 
               <ul class="menu-sub">
               <li class="menu-item">
-                  <a href="listEmploye.php?id=<?= $date['ID_admin'] ?>" class="menu-link">
+                  <a href="listEmploye.php" class="menu-link">
                     <div data-i18n="Without menu">liset Employe</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="createEmploye.php?id=<?= $date['ID_admin'] ?>" class="menu-link">
+                  <a href="createEmploye.php" class="menu-link">
                     <div data-i18n="Without menu">Ajouter Employe</div>
                   </a>
                 </li>
