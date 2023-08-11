@@ -2,8 +2,9 @@
 ob_start(); // Mettre en tampon la sortie.
 
 require_once("../../controle/admin/StagiaireController.php");
-$obj = new StagiaireController();
-$obj->guardar(
+$obj = new  StagiaireController();
+$obj->updateStagiaire(
+  $_POST['ID_stagiaire'],
   $_POST['name'],
   $_POST['prenom'],
   $_POST['cin'],
@@ -19,9 +20,15 @@ $obj->guardar(
   $_POST['date_D'],
   $_POST['date_F'],
   $_POST['date_creation'],
+  $_POST['date_update'],
   $_FILES['image'],
   $_FILES['cv']
 );
-
 ob_end_flush(); // Afficher la sortie mise en tampon.
+
+
+require_once("../../controle/Admin/StagiaireController.php");
+$obj = new  StagiaireController();
+$date = $obj->show($_GET['id']);
 ?>
+

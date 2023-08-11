@@ -1,7 +1,5 @@
 <?php
-require_once("../../controle/admin/AdminController.php");
-$obj = new AdminController ();
-$date = $obj->show($_GET['id']);
+
   
 ?>
 <!DOCTYPE html>
@@ -84,7 +82,7 @@ $date = $obj->show($_GET['id']);
           <ul class="menu-inner py-1">
             <!-- Dashboard -->
             <li class="menu-item active">
-              <a href="index.php?id=<?= $date['ID_admin'] ?>" class="menu-link">
+              <a href="index.php" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
               </a>
@@ -97,13 +95,13 @@ $date = $obj->show($_GET['id']);
 
               <ul class="menu-sub">
               <li class="menu-item">
-                  <a href="listAdmin.php?id=<?= $date['ID_admin'] ?>" class="menu-link">
+                  <a href="listAdmin.php" class="menu-link">
                     <div data-i18n="Without menu">liset Admin</div>
                   </a>
                 </li>
 
                 <li class="menu-item">
-                  <a href="createAdmin.php?id=<?= $date['ID_admin'] ?>" class="menu-link">
+                  <a href="createAdmin.php" class="menu-link">
                     <div data-i18n="Without menu">Ajouter Admin</div>
                   </a>
                 </li>
@@ -117,7 +115,7 @@ $date = $obj->show($_GET['id']);
               </a>
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="listStagiaire.php?id=<?= $date['ID_admin'] ?>" class="menu-link">
+                  <a href="listStagiaire.php" class="menu-link">
                     <div data-i18n="Without menu">liset Stagiaire</div>
                   </a>
                 </li>
@@ -125,7 +123,7 @@ $date = $obj->show($_GET['id']);
               
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="createStagiaire.php?id=<?= $date['ID_admin'] ?>" class="menu-link">
+                  <a href="createStagiaire.php" class="menu-link">
                     <div data-i18n="Without menu">Ajouter Stagiaire</div>
                   </a>
                 </li>
@@ -158,12 +156,12 @@ $date = $obj->show($_GET['id']);
 
               <ul class="menu-sub">
               <li class="menu-item">
-                  <a href="listDepartements.php?id=<?= $date['ID_admin'] ?>" class="menu-link">
+                  <a href="listDepartements.php" class="menu-link">
                     <div data-i18n="Without menu">liset Departement</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="createDepartement.php?id=<?= $date['ID_admin'] ?>" class="menu-link">
+                  <a href="createDepartement.php" class="menu-link">
                     <div data-i18n="Without menu">Ajouter Departement</div>
                   </a>
                 </li>
@@ -238,7 +236,7 @@ $date = $obj->show($_GET['id']);
                       <div class="dropdown-divider"></div>
                          </li>
                          <li>
-                         <a class="dropdown-item" href="profile.php?id=<?php echo $date['ID_admin']; ?>">
+                         <a class="dropdown-item" href="profile.php">
                                      <i class="bx bx-user me-2"></i>
                                     <span class="align-middle">My Profile</span>
                              </a>

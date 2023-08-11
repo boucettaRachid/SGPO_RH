@@ -3,7 +3,7 @@ class StagiaireController {
     private $model;
 
     public function __construct() {
-        require_once("C:\wamp\www\SGPO_RH-rachid\Model\admin\StagiaireModel.php");
+        require_once("../../Model/admin/StagiaireModel.php");
         $this->model = new StagiaireModel();
     }
  
@@ -20,11 +20,11 @@ class StagiaireController {
 
         $id = $this->model->insertStagiaire($name, $prenom, $cin, $address, $email, $tele, $username, $password, $ID_dep,$ID_employer, $mission, $type_stage, $date_D, $date_F, $date_creation, $image, $cv);
 
-        return ($id != false) ? header("Location: C:\wamp\www\SGPO_RH-rachid\templets\admin\listStagiaire.php?id=" . $id) : header("Location: C:\wamp\www\SGPO_RH-rachid\templets\admin\createStagiaire.php");
+        return ($id != false) ? header("Location: ../../templets/admin/listStagiaire.php?id=" . $id) : header("Location: ../../templets/admin/createStagiaire.php");
     }
 
     public function show($id) {
-        return ($this->model->show($id) != false) ? $this->model->show($id) : header("Location:C:\wamp\www\SGPO_RH-rachid\templets\admin\listStagiaire.php");
+        return ($this->model->show($id) != false) ? $this->model->show($id) : header("Location: ../../templets/admin/listStagiaire.php");
     }
 
     public function getAllStagiaire() {
@@ -50,14 +50,14 @@ class StagiaireController {
             $cv = isset($_POST['cv_old']) ? $_POST['cv_old'] : '';
         }
 
-        return ($this->model->updateStagiaire($ID_stagiaire, $name, $prenom, $cin, $address, $email, $tele, $username, $password, $ID_dep,$ID_employer, $mission, $type_stage, $date_D, $date_F, $date_update, $image, $cv) != false) ? header("Location: C:\wamp\www\SGPO_RH-rachid\templets\admin\listStagiaire.php") : null;
+        return ($this->model->updateStagiaire($ID_stagiaire, $name, $prenom, $cin, $address, $email, $tele, $username, $password, $ID_dep,$ID_employer, $mission, $type_stage, $date_D, $date_F, $date_update, $image, $cv) != false) ? header("Location: ../../templets/admin/listStagiaire.php") : null;
     }
 
     public function deleteStagiaire($ID_stagiaire) {
         $result = $this->model->deleteStagiaire($ID_stagiaire);
 
         if ($result) {
-            header("Location: listStagiaire.php");
+            header("Location: ../../templets/admin/listStagiaire.php");
         } else {
             // Handle delete failure
         }
