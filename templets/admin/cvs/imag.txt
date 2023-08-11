@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FRMK espace adhérents</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="icon"
+      href="http://frmk.ma/fr/wp-content/uploads/2018/07/logo-frmk120.png"
+      type="photo_ad/icon type"
+    />
+    <style>
+      .form-check .form-check-input {
+        float: right !important;
+        margin-left: 0.5em !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar bg-body-tertiary">
+      <div class="container">
+        <a class="navbar-brand" href="http://frmk.ma/">
+          <img
+            src="http://frmk.ma/fr/wp-content/uploads/2018/07/logo-frmk120.png"
+            alt="Bootstrap"
+            width="40"
+            height="40"
+          />
+        </a>
+      </div>
+    </nav>
+
+    <section>
+      <div class="container p-4" style="align-content: center; display: grid">
+        <div class="row">
+          <div class="col-md-12 justify-content-center d-flex">
+            <img
+              src="http://frmk.ma/fr/wp-content/uploads/2018/07/logo-frmk120.png"
+              alt="FRMK"
+            />
+          </div>
+          <div class="col-md-12 p-5 justify-content-center d-flex">
+            <p class="text-center">
+              الاستمارة الخاصة بالمتدربين الموجزين لدى الجمعية للموسم الرياضي
+              2023-2022
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <style>
+      .text {
+        background-position: bottom;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+    </style>
+<?php
+$servername = 'localhost';
+$username = 'root';
+$password = '';
+$dbname = "sgpoma_frmkforms";
+$msg = '';
+try {
+    $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+
+if (isset($_GET['ID'])) {
+    $id = $_GET['ID'];
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Update the data
+        $id = $_POST['ID'];
+        $nom = $_POST['nome'];
+        $prenome = $_POST['prenome'];
+        $ville = $_POST['ville'];
+        $CIN = $_POST['CIN'];
+        $DATE_naissance = $_POST['DATE_naissance'];
+        $ville_naissance = $_POST['ville_naissance'];
+        $profession = $_POST['profession'];
+        $situation_matri = $_POST['situation_matri'];
+        $nomber_enfant = $_POST['nomber_enfant'];
+        $associ_affiliee = $_POST['associ_affiliee'];
+        $email = $_POST['email'];
+        $phone = $_POST['phone'];
+        $discipline = $_POST['discipline'];
+        $nom_club = $_POST['nom_club'];
+        $grade = $_POST['grade'];
+         //$date_creation = $_POST['date_creation'];
+        $Diplome = $_POST['Diplome'];
+        $saison_sportive = $_POST['saison_sportive'];
+        $leta_sante = $_POST['leta_sante'];
+        $ligue = $_POST['ligue'];
+
+        $filename = '';
+        if (!empty($_FILES['photo_ad']['name'])) {
+            // Handle photo_ad upload if needed
+            $photo_ad = $_FILES['photo_ad']['name'];
+            $filename = uniqid() . $photo_ad;
+            move_uploaded_file($_FILES['photo_ad']['tmp_name'], 'upload/' . $filename);
+        } else {
+            // No new photo_ad provided, retain the existing photo_ad filename
+            $filename = isset($_POST['photo_ad_old']) ? $_POST['photo_ad_old'] : '';
+        }
+
+        $stmt = $pdo->prepare('UPDATE form_ad SET nome = ?, prenome = ?, ville = ?, CIN = ?, DATE_naissance = ?, ville_naissance = ?, profession = ?, situation_matri = ?, nomber_enfant = ?, associ_affiliee = ?, email = ?, phone = ?, discipline = ?, nom_club = ?, grade = ?, Diplome = ?, saison_sportive = ?, leta_sante = ? ,ligue = ? , photo_ad=?  WHERE ID = ?');
+        $stmt->execute([$nom, $prenome, $ville, $CIN, $DATE_naissance, $ville_naissance, $profession, $situation_matri, $nomber_enfant, $associ_affiliee, $email, $phone, $discipline, $nom_club, $grade, $Diplome, $saison_sportive, $leta_sante,  $ligue, $filename, $id]);
+        $msg = 'Mis à jour avec succès !';
+        header("Location: home.php");
+        exit();
+    } else {
+        // Retrieve data for the specified ID
+        $stmt = $pdo->prepare('SELECT * FROM form_ad WHERE ID = ?');
+        $stmt->execute([$id]);
+        $form_ad = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$form_ad) {
+            exit('Le stagiaire avec cet ID n\'existe pas !');
+        }
+    }
+} else {
+    exit('Aucun ID spécifié !');
+}
+
+ob_start(); // Start output buffering
+?>
+<section>
+<div class="conatiner bg-light">
+      <h2>Mettre à jour les informations de l'association <?= $form_ad['nome'] ?></h2>
+      <form action="edit_form_ad.php?ID=<?= $form_ad['ID'] ?>" method="post" class="col d-flex" enctype="multipart/form-data">
+        <input type="hidden" name="ID" value="<?= $form_ad['ID'] ?>">
+          <div class="row p-4 justify-content-center d-flex">
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label"
+                  >Prénom /الاسم:*</label
+                >
+                <input type="text" class="form-control" name="prenome" value="<?= $form_ad['prenome'] ?>" id="prenome">
+              </div>
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label"
+                  >Nom / النسب:*</label
+                >
+                <input type="text" class="form-control" name="nome" value="<?= $form_ad['nome'] ?>" id="nome">
+              </div>
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label"
+                  >Ville de résidence/ مدينة الاقامة:*</label
+                >
+                <input type="text" class="form-control" name="ville" value="<?= $form_ad['ville'] ?>" id="ville">
+              </div>
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label"
+                  >CIN/ رقم البطاقة الوطنية:*</label
+                >
+                <input    class="form-control" name="CIN" value="<?= $form_ad['CIN'] ?>" id="CIN">
+              </div>
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label" 
+                  >Date de naissance/ تاريخ الازدياد:*</label
+                >
+                <input class="form-control" name="DATE_naissance" value="<?= $form_ad['DATE_naissance'] ?>" id="DATE_naissance">
+              </div>
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label"
+                  >Ville de naissance/ مكان الازدياد:*</label
+                >
+                <input class="form-control" name="ville_naissance" value="<?= $form_ad['ville_naissance'] ?>" id="ville_naissance">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label"
+                  >Profession/ المهنة:*</label
+                >
+                <input type="text" class="form-control" name="profession" value="<?= $form_ad['profession'] ?>" id="profession">
+              </div>
+              
+              <div class="mb-3" id="situamat">
+                <label for="exampleFormControlInput1" class="form-label"
+                  >Situation matrimoniale/ الحالة الاجتماعية :</label>
+                  <input class="form-control" name="situation_matri" value="<?= $form_ad['situation_matri'] ?>" id="situation_matri">
+                 
+              </div>
+            
+              <div class="mb-3" id="Nenf">
+                <label for="exampleFormControlInput1" class="form-label"
+                  >Nombre d'enfant/ عدد الاطفال :</label
+                >
+                <input  type="number"
+                  min="0"
+                  max="20" 
+                  class="form-control" name="nomber_enfant" value="<?= $form_ad['nomber_enfant'] ?>" id="nomber_enfant">
+              </div>
+
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label"
+                  >Association affiliée / الجمعية التابع لها :*</label
+                >
+                <input class="form-control" name="associ_affiliee" value="<?= $form_ad['associ_affiliee'] ?>" id="associ_affiliee">
+              </div>
+
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label"
+                  >Adresse email/ البريد الالكتروني :</label
+                >
+                <input  class="form-control" placeholder="Votre-réponse@gmail.com" name="email" placeholder="example@example.com" value="<?= $form_ad['email'] ?>" id="email">
+              </div>
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label"
+                  >N° Téléphone/ رقم الهاتف :*</label
+                >
+                <input class="form-control" name="phone" value="<?= $form_ad['phone'] ?>" id="phone">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3">
+
+                <label for="exampleFormControlInput1" class="form-label">Discipline/الفئة :*</label>
+
+                <input type="text" class="form-control" name="discipline" value="<?= $form_ad['discipline'] ?>" id="discipline">
+
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" onclick="Disci('kata',1)" value="kata" id="kata">
+                  <label class="form-check-label" for="kata">kata</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" onclick="Disci('Shotokan',2)" value="Shotokan" id="Shotokan">
+                  <label class="form-check-label" for="Shotokan">Shotokan</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" onclick="Disci('Kenpo',3)" value="Kenpo" id="Kenpo">
+                  <label class="form-check-label" for="Kenpo">Kenpo</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" onclick="Disci('Kyokushinkai',4)" value="Kyokushinkai" id="Kyokushinkai">
+                  <label class="form-check-label" for="Kyokushinkai">Kyokushinkai</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" onclick="Disci('Takeda',5)" value="Takeda budo" id="Takeda">
+                  <label class="form-check-label" for="Takeda">Takeda budo</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" onclick="Disci('contact',6)" value="Karaté contact" id="contact">
+                  <label class="form-check-label" for="contact">Karaté contact</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" onclick="Disci('fitness',7)" value="Karaté fitness" id="fitness">
+                  <label class="form-check-label" for="fitness">Karaté fitness</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" onclick="Disci('Body',8)" value="Body karaté" id="Body">
+                  <label class="form-check-label" for="Body">Body karaté</label>
+                </div>
+
+
+              </div>
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label"
+                  >Nom de club/ اسم النادي : *</label
+                >
+                <input class="form-control"  name="nom_club" value="<?= $form_ad['nom_club'] ?>" id="nom_club">
+              </div>
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label"
+                  >Nom de la ligue / اسم العصبة :*</label
+                >
+                <input type="text" class="form-control" name="ligue" value="<?= $form_ad['ligue'] ?>" id="ligue">
+              </div>
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label"
+                  >Grade :*</label
+                >
+                <input class="form-control" name="grade" value="<?= $form_ad['grade'] ?>" id="grade">
+              </div>
+
+            </div>
+
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label"
+                  >Diplôme :*</label
+                >
+                <input type="text" class="form-control" name="Diplome" value="<?= $form_ad['Diplome'] ?>" id="Diplome">
+              </div>
+
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label"
+                  >la saison sportive / الموسم الرياضي :*</label
+                >
+                <input type="text" class="form-control" name="saison_sportive" value="<?= $form_ad['saison_sportive'] ?>" id="saison_sportive">
+                
+              </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label"
+                      >L'état de santé/ الحالة الصحية :</label
+                    >
+                    <input type="text" class="form-control" name="leta_sante" value="<?= $form_ad['leta_sante'] ?>" id="leta_sante">
+                </div>
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">
+                   La photo pour l'adhèrent/ الصورة الشخصية :</label>
+                 <?php if (!empty($form_ad['photo_ad'])): ?>
+                   <span><?=$form_ad['photo_ad']?></span>
+                     <input type="hidden" name="photo_ad_old" value="<?=$form_ad['photo_ad']?>">
+                      <?php endif; ?>
+                  <input type="file" class="form-control" name="photo_ad">
+                  <img width="100" class="img img-fluid" src="upload/<?= $form_ad['photo_ad'] ?>"><br>
+               </div>
+              </div>
+            </div>
+          </div>
+          <div class="row p-4 justify-content-center d-flex">
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-dark">Mettre à jour</button> 
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+ 
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

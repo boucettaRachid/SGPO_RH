@@ -1,0 +1,193 @@
+<?php
+require '../../Model/admin/AdminModel.php';
+
+class AdminController
+{
+    public function index()
+    {
+        $admins = AdminModel::getAll();
+        require_once('../../templets/admin/index.php');
+    }
+
+    public function create()
+    {
+        require_once('../../templets/admin/createStagaire.php');
+    }
+
+    public function store()
+    {
+        if (isset($_POST['name']) && isset($_POST['prenom']) && isset($_POST['email']) && isset($_POST['telephone']) && isset($_POST['profession']) && isset($_POST['password']) && isset($_POST['role'])) {
+            $name = $_POST['name'];
+            $prenom = $_POST['prenom'];
+            $email = $_POST['email'];
+            $telephone = $_POST['telephone'];
+            $profession = $_POST['profession'];
+            $password = $_POST['password'];
+            $role = $_POST['role'];
+            AdminModel::create($name, $prenom, $email, $telephone, $profession, $password, $role);
+        }
+        header('Location: ../../templets/index.php');
+    }
+
+    public function edit($id)
+    {
+        $admin = AdminModel::getById($id);
+        require_once('../../templets/admin/updateStagiaire.php');
+    }
+
+    public function update($id)
+    {
+        if (isset($_POST['name']) && isset($_POST['prenom']) && isset($_POST['email']) && isset($_POST['telephone']) && isset($_POST['profession']) && isset($_POST['password']) && isset($_POST['role'])) {
+            $name = $_POST['name'];
+            $prenom = $_POST['prenom'];
+            $email = $_POST['email'];
+            $telephone = $_POST['telephone'];
+            $profession = $_POST['profession'];
+            $password = $_POST['password'];
+            $role = $_POST['role'];
+            AdminModel::update($id, $name, $prenom, $email, $telephone, $profession, $password, $role);
+        }
+        header('Location: ../../templets/index.php');
+    }
+
+    public function delete($id)
+    {
+        AdminModel::delete($id);
+        header('Location: ../../templets/index.php');
+    }
+}
+<?php
+require '../../setting/db.php';
+
+class AdminModel
+{
+    public static function getAll()
+    {     $pdo = pdo_connect_mysql(); 
+      
+        $stmt = $pdo->query('SELECT * FROM admin');
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getById($id)
+    {
+        $pdo = pdo_connect_mysql(); 
+        $stmt = $pdo->prepare('SELECT * FROM admin WHERE ID_admin = :id');
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch();
+    }
+
+    public static function create($name, $prenom, $email, $telephone, $profession, $password, $role)
+    {
+        global $pdo;
+        $dateCreation = date("Y-m-d");
+        $dateUpdate = date("Y-m-d");
+        $stmt = $pdo->prepare('INSERT INTO admin (Name, Prenom, Email, Telephone, Pofession, Password, Date_cration, Date_update, Role) VALUES (:name, :prenom, :email, :telephone, :profession, :password, :dateCreation, :dateUpdate, :role)');
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':prenom', $prenom);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':telephone', $telephone);
+        $stmt->bindParam(':profession', $profession);
+        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':dateCreation', $dateCreation);
+        $stmt->bindParam(':dateUpdate', $dateUpdate);
+        $stmt->bindParam(':role', $role);
+        $stmt->execute();
+    }
+
+    public static function update($id, $name, $prenom, $email, $telephone, $profession, $password, $role)
+    {
+        global $pdo;
+        $dateUpdate = date("Y-m-d");
+        $stmt = $pdo->prepare('UPDATE admin SET Name = :name, Prenom = :prenom, Email = :email, Telephone = :telephone, Pofession = :profession, Password = :password, Date_update = :dateUpdate, Role = :role WHERE ID_admin = :id');
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':prenom', $prenom);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':telephone', $telephone);
+        $stmt->bindParam(':profession', $profession);
+        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':dateUpdate', $dateUpdate);
+        $stmt->bindParam(':role', $role);
+        $stmt->execute();
+    }
+
+    public static function delete($id)
+    {
+        global $pdo;
+        $stmt = $pdo->prepare('DELETE FROM admin WHERE ID_admin = :id');
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin CRUD Example</title>
+</head>
+<body>
+    <h1>Admins</h1>
+    <a href="../index.php?action=create">Add Admin</a>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Prenom</th>
+            <th>Email</th>
+            <th>Telephone</th>
+            <th>Profession</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+        <?php foreach ($admins as $admin) { ?>
+            <tr>
+                <td><?php echo $admin['ID_admin']; ?></td>
+                <td><?php echo $admin['Name']; ?></td>
+                <td><?php echo $admin['Prenom']; ?></td>
+                <td><?php echo $admin['Email']; ?></td>
+                <td><?php echo $admin['Telephone']; ?></td>
+                <td><?php echo $admin['Pofession']; ?></td>
+                <td><?php echo $admin['Role']; ?></td>
+                <td>
+                    <a href="index.php?action=edit&id=<?php echo $admin['ID_admin']; ?>">Edit</a>
+                    <a href="index.php?action=delete&id=<?php echo $admin['ID_admin']; ?>">Delete</a>
+                </td>
+            </tr>
+        <?php } ?>
+    </table>
+</body>
+</html>
+<?php
+require_once('../controle/admin/AdminController.php');
+
+// Get the action from the URL
+$action = isset($_GET['action']) ? $_GET['action'] : 'index';
+
+$userController = new UserController();
+
+switch ($action) {
+    case 'index':
+        $userController->index();
+        break;
+    case 'create':
+        $userController->create();
+        break;
+    case 'store':
+        $userController->store();
+        break;
+    case 'edit':
+        $id = isset($_GET['id']) ? $_GET['id'] : null;
+        $userController->edit($id);
+        break;
+    case 'update':
+        $id = isset($_GET['id']) ? $_GET['id'] : null;
+        $userController->update($id);
+        break;
+    case 'delete':
+        $id = isset($_GET['id']) ? $_GET['id'] : null;
+        $userController->delete($id);
+        break;
+    default:
+        header('Location: index.php');
+        break;
+}
