@@ -60,8 +60,7 @@ include 'header.php';
 <body>
 <div class="content-wrapper">
 <form action="importDoc.php" method="post" enctype="multipart/form-data">
-        <div class="container">
-           
+        <div class="container ">
             <div class="form-group">
             <h1 class="mb-0 pb-2 border-bottom" style="margin: 10 px; margin-top: 15px;"><i>Deposer </i></h1>
                 <input type="hidden" class="form-control" name="id_Stagiaire" id="id_Stagiaire" value="<?php echo $stagiaireData['ID_stagiaire']; ?>" readonly >
@@ -119,7 +118,6 @@ include 'header.php';
 </table>
 </div>
 </div>
-<a href="pagination.php?id=<?php echo $stagiaireData['ID_stagiaire']; ?>">pagination</a>
    
 </body>
 </html>
